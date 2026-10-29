@@ -1,0 +1,181 @@
+{% extends 'base.html' %}
+{% load static humanize %}
+
+{% block title %}{{ book.title }} - ThRead{% endblock title %}
+{% block body_class %}page-detail{% endblock body_class %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/book_detail.css' %}" />
+{% endblock extra_head %}
+
+{% block content %}
+<!-- 도서 상세 Hero: 배경은 이 책의 표지를 흐리게 처리 -->
+<section class="detail-hero" style="--cover: url('{{ book.cover_url }}')">
+  <div class="detail-bg" aria-hidden="true"></div>
+  <div class="detail-overlay" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="row g-5 align-items-center">
+      <!-- 왼쪽: 작가 및 도서 소개 -->
+      <div class="col-lg-5">
+        <img
+          src="{{ book.cover_url }}"
+          alt="{{ book.title }} 표지"
+          class="detail-cover enter"
+          style="--i: 0"
+        />
+        <div class="d-flex flex-wrap gap-2 mt-4 enter" style="--i: 1">
+          {% if book.category_short %}<span class="meta-chip">{{ book.category_short }}</span>{% endif %}
+          {% if book.publisher %}<span class="meta-chip">{{ book.publisher }}</span>{% endif %}
+          {% if book.pub_date %}<span class="meta-chip">{{ book.pub_date|date:"Y" }}년</span>{% endif %}
+          {% if book.bestseller_rank %}<span class="meta-chip meta-chip-brand">베스트셀러 {{ book.bestseller_rank }}위</span>{% endif %}
+        </div>
+        <h1 class="detail-title enter" style="--i: 2">{{ book.title }}</h1>
+        {% if book.subtitle %}<p class="detail-subtitle enter" style="--i: 2">{{ book.subtitle }}</p>{% endif %}
+        <p class="detail-author enter" style="--i: 2">{{ book.author_display }}</p>
+
+        <ul class="detail-meta list-unstyled d-flex flex-wrap gap-3 enter" style="--i: 3">
+          {% if book.rating_score %}
+          <li><i class="bi bi-star-fill"></i> {{ book.rating_score }} <span>({{ book.rating_count|intcomma }}명)</span></li>
+          {% endif %}
+          {% if book.page_count %}<li><i class="bi bi-file-earmark-text"></i> {{ book.page_count }}쪽</li>{% endif %}
+          {% if book.price_sales %}<li><i class="bi bi-tag"></i> {{ book.price_sales|intcomma }}원</li>{% endif %}
+        </ul>
+
+        <div class="d-flex flex-wrap gap-2 enter" style="--i: 3">
+          <!-- 담기: 마이페이지 "담은 책"에 저장 (main.js가 fetch로 토글) -->
+          <button type="button" class="btn btn-archive{% if archived %} is-archived{% endif %}"
+                  data-archive-url="{% url 'books:archive' book.isbn13 %}" aria-pressed="{{ archived|yesno:'true,false' }}">
+            <i class="bi {% if archived %}bi-archive-fill{% else %}bi-archive{% endif %} me-1"></i><span>{% if archived %}담았어요{% else %}담기{% endif %}</span>
+          </button>
+          {% if book.aladin_link %}
+          <a class="btn btn-archive" href="{{ book.aladin_link }}" target="_blank" rel="noopener">
+            <i class="bi bi-box-arrow-up-right me-1"></i>알라딘에서 보기
+          </a>
+          {% endif %}
+        </div>
+
+        {% if book.description %}
+        <div class="detail-desc mt-4 enter" style="--i: 4">
+          <p class="mb-1">{{ book.description }}</p>
+          <small class="detail-source">책 소개: 알라딘</small>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- 오른쪽: 세부 정보 탭 -->
+      <div class="col-lg-7">
+        <div class="detail-panel enter" style="--i: 3">
+          <ul class="nav nav-tabs mb-3" id="detailTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link active"
+                id="library-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#library-pane"
+                type="button"
+                role="tab"
+                aria-controls="library-pane"
+                aria-selected="true"
+              >
+                <i class="bi bi-geo-alt me-1"></i>대여 가능 도서관
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button
+                class="nav-link"
+                id="thread-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#thread-pane"
+                type="button"
+                role="tab"
+                aria-controls="thread-pane"
+                aria-selected="false"
+              >
+                <i class="bi bi-chat-dots me-1"></i>쓰레드{% if thread_count %} <span class="tab-count">{{ thread_count }}</span>{% endif %}
+              </button>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="detailTabContent">
+            <!-- 대여 가능 도서관 탭 (실제 대출 현황은 도서관 정보나루 API 연동 시 교체) -->
+            <div
+              class="tab-pane fade show active"
+              id="library-pane"
+              role="tabpanel"
+              aria-labelledby="library-tab"
+              tabindex="0"
+            >
+              <iframe
+                class="library-map"
+                src="https://www.google.com/maps?q=%EA%B5%AD%EB%A6%BD%EC%A4%91%EC%95%99%EB%8F%84%EC%84%9C%EA%B4%80&output=embed"
+                title="국립중앙도서관 주변 지도"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+                allowfullscreen
+              ></iframe>
+              <ul class="list-group list-group-flush library-list mt-2">
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span><i class="bi bi-building me-2"></i>국립중앙도서관</span>
+                  <span class="badge rounded-pill text-bg-secondary">관내 열람</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span><i class="bi bi-building me-2"></i>서초구립반포도서관</span>
+                  <span class="badge rounded-pill text-bg-success">대여 가능</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+                  <span><i class="bi bi-building me-2"></i>서울도서관</span>
+                  <span class="badge rounded-pill text-bg-light border">예약 대기</span>
+                </li>
+              </ul>
+              <p class="small text-muted mt-2 mb-0">* 대여 현황은 예시 데이터입니다.</p>
+            </div>
+
+            <!-- 쓰레드 탭: 이 책의 최근 쓰레드 5개 -->
+            <div
+              class="tab-pane fade"
+              id="thread-pane"
+              role="tabpanel"
+              aria-labelledby="thread-tab"
+              tabindex="0"
+            >
+              {% if threads %}
+              <ul class="list-group list-group-flush thread-list">
+                {% for thread in threads %}
+                <li class="list-group-item px-0">
+                  <a class="d-flex justify-content-between align-items-start gap-3 text-reset text-decoration-none" href="{{ thread.get_absolute_url }}">
+                    <div class="min-w-0">
+                      <div class="thread-title text-truncate">{{ thread.title }}</div>
+                      <small class="text-muted">{{ thread.author.nickname }} · {{ thread.created_at|date:"Y.m.d" }}</small>
+                    </div>
+                    <span class="likes"><i class="bi bi-heart-fill me-1"></i>{{ thread.like_count }}</span>
+                  </a>
+                </li>
+                {% endfor %}
+              </ul>
+              <div class="d-flex justify-content-between align-items-center mt-3">
+                <a class="small text-muted" href="{% url 'threads:list' %}?book={{ book.isbn13 }}">
+                  전체 {{ thread_count }}개 보기 <i class="bi bi-chevron-right"></i>
+                </a>
+                <a class="btn btn-brand btn-sm px-3" href="{% url 'threads:create' %}?book={{ book.isbn13 }}">
+                  <i class="bi bi-pencil-square me-1"></i>쓰레드 작성
+                </a>
+              </div>
+              {% else %}
+              <div class="thread-empty text-center">
+                <i class="bi bi-chat-square-text"></i>
+                <p class="fw-semibold mt-3 mb-1">아직 이 책에 대한 쓰레드가 없어요</p>
+                <p class="text-muted small mb-4">『{{ book.title }}』에 대한 첫 번째 쓰레드를 남겨 보세요.</p>
+                <a class="btn btn-brand px-4" href="{% url 'threads:create' %}?book={{ book.isbn13 }}">
+                  <i class="bi bi-pencil-square me-1"></i>쓰레드 작성
+                </a>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock content %}

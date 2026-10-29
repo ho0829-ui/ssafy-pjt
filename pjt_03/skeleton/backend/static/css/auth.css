@@ -1,0 +1,150 @@
+/* 로그인 · 회원가입: 흐린 도서관 사진 위 밝은 유리 카드 (F309·상세 페이지와 같은 카드) */
+
+.auth-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6.5rem 1rem 3rem;
+  overflow: hidden;
+  background: #1c1c22;
+}
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  background: url("../images/hero/hero_image.jpg") center / cover no-repeat;
+  filter: blur(10px) brightness(0.55);
+  transform: scale(1.1);
+}
+.auth-card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 2.25rem 2rem;
+  background: rgba(255, 255, 255, 0.82);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .auth-card {
+    background: rgba(255, 255, 255, 0.97);
+  }
+}
+.auth-logo {
+  font-family: "GmarketSansTTFMedium";
+  font-size: 1.4rem;
+  margin: 0;
+}
+.auth-logo .th {
+  color: var(--text);
+}
+.auth-logo .read {
+  color: var(--brand);
+}
+.auth-title {
+  font-family: "GmarketSansTTFMedium";
+  font-size: 1.6rem;
+  margin: 0.5rem 0 0.25rem;
+}
+.auth-lead {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.auth-card form {
+  margin-top: 1.5rem;
+}
+.auth-field {
+  margin-bottom: 1rem;
+}
+.auth-field .form-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+.auth-field .form-control {
+  height: 46px;
+  border-radius: var(--radius-sm);
+}
+.auth-field .form-control:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 0.2rem rgba(254, 74, 81, 0.15);
+}
+.auth-password {
+  position: relative;
+}
+.auth-password .form-control {
+  padding-right: 2.75rem;
+}
+.auth-password-toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 44px;
+  height: 46px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+.auth-password-toggle:hover {
+  color: var(--text);
+}
+/* 오류 아이콘과 보기 버튼이 겹치지 않도록 Bootstrap 기본 경고 아이콘 숨김 */
+.auth-password .form-control.is-invalid {
+  background-image: none;
+}
+.auth-help {
+  margin-top: 0.35rem;
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+.auth-help ul {
+  margin: 0;
+  padding-left: 1.1rem;
+}
+.auth-alert {
+  margin-bottom: 1rem;
+  padding: 0.65rem 0.9rem;
+  border-radius: var(--radius-sm);
+  background: #fff1f1;
+  color: #b4363b;
+  font-size: 0.88rem;
+}
+.form-check-input:checked {
+  background-color: var(--brand);
+  border-color: var(--brand);
+}
+.auth-submit {
+  height: 48px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+.auth-switch {
+  margin: 1.25rem 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.auth-switch a {
+  color: var(--brand);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* 진입 애니메이션 (상세 페이지와 같은 fade-up) */
+.enter {
+  animation: fade-up 0.8s var(--ease) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+}
+@media (max-width: 575.98px) {
+  .auth-card {
+    padding: 1.75rem 1.25rem;
+  }
+}

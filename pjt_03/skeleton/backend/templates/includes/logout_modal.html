@@ -1,0 +1,36 @@
+<div
+  class="modal fade"
+  id="logoutModal"
+  tabindex="-1"
+  aria-labelledby="logoutModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="logoutModalLabel">로그아웃</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <p class="mb-4">정말 로그아웃 하시겠습니까?</p>
+        <button
+          type="button"
+          class="btn btn-outline-secondary px-4 me-2"
+          data-bs-dismiss="modal"
+        >
+          취소
+        </button>
+        <!-- Django 5부터 로그아웃은 POST만 허용: CSRF 토큰을 담은 폼으로 전송 -->
+        <form class="d-inline" method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-logout px-4">로그아웃</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

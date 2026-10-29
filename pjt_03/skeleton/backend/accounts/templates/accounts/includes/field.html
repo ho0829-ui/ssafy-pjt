@@ -1,0 +1,20 @@
+{# 입력칸 하나: 라벨 + 입력 + (비밀번호면 보기 버튼) + 오류 + 도움말 #}
+<div class="auth-field">
+  <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {% if field.field.widget.input_type == 'password' %}
+  <div class="auth-password">
+    {{ field }}
+    <button type="button" class="auth-password-toggle" aria-label="비밀번호 보기" aria-pressed="false">
+      <i class="bi bi-eye"></i>
+    </button>
+  </div>
+  {% else %}
+  {{ field }}
+  {% endif %}
+  {% for error in field.errors %}
+  <div class="invalid-feedback d-block">{{ error }}</div>
+  {% endfor %}
+  {% if field.help_text and not field.errors %}
+  <div class="auth-help">{{ field.help_text|safe }}</div>
+  {% endif %}
+</div>

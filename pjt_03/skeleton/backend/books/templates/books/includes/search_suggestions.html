@@ -1,0 +1,8 @@
+{% if suggestions %}
+<div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+  <span class="search-label align-self-center me-1">추천 검색어</span>
+  {% for title in suggestions %}
+  <a class="search-chip" href="{% url 'books:search' %}?q={{ title|urlencode }}">{{ title|truncatechars:16 }}</a>
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ThRead - Popular Thread</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <style>
+      /* 폰트 정의 */
+      @font-face {
+        font-family: "SBAggro_L";
+        src: url("assets/fonts/SBAggroOTF_L.ttf") format("truetype");
+      }
+      @font-face {
+        font-family: "GmarketSansTTFMedium";
+        src: url("assets/fonts/GmarketSansTTFMedium.ttf") format("truetype");
+      }
+
+      /* 섹션 폭 80%, 가운데 정렬 */
+      .popular-thread,
+      .thread-list {
+        width: 80%;
+        margin: 0 auto;
+      }
+      .section-title {
+        font-family: "GmarketSansTTFMedium";
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin: 0 0 0.5rem;
+      }
+      .section-subtitle {
+        font-size: 1rem;
+        color: #6c757d;
+        margin-bottom: 1.5rem;
+      }
+
+      /* 인기 쓰레드 카드 */
+      .thread-img {
+        height: 200px;
+        object-fit: cover;
+      }
+      .thread .card-title {
+        font-weight: 700;
+      }
+      .thread .card-text {
+        color: #555;
+        display: -webkit-box;
+        -webkit-line-clamp: 3; /* 본문 3줄 말줄임 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+      .thread .card-footer {
+        background: #fff;
+        font-size: 0.9rem;
+      }
+      .thread .book-name {
+        color: #fe4a51;
+      }
+
+      /* Pagination: Bootstrap 기본 class보다 높은 명시도 */
+      .thread .pagination .page-link {
+        border: none;
+        background-color: transparent;
+        color: #333;
+      }
+      .thread .pagination .page-link:focus {
+        box-shadow: none;
+      }
+      .thread .pagination .page-item.active .page-link {
+        color: #fe4a51;
+        background-color: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 인기 쓰레드 섹션 -->
+    <section class="thread py-5 bg-light">
+      <div class="popular-thread">
+        <h3 class="section-title">지금 이 쓰레드</h3>
+        <h3 class="section-subtitle">최근 사람들이 많이 공감한 게시글입니다</h3>
+      </div>
+      <div class="thread-list">
+        <div class="row g-4">
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100">
+              <img src="assets/threads/img1.jpg" class="card-img-top thread-img" alt="라벤더와 메모" />
+              <div class="card-body">
+                <h5 class="card-title">마지막 장을 덮고 남긴 메모</h5>
+                <p class="card-text">
+                  책을 다 읽고 한참 동안 아무것도 할 수 없었어요. 떠오르는 문장들을
+                  작은 종이에 적어 책갈피 대신 끼워 두었습니다. 다시 펼칠 용기가 날
+                  때 이 메모부터 읽어보려고 해요.
+                </p>
+              </div>
+              <div class="card-footer d-flex justify-content-between">
+                <span>책먼지</span>
+                <span class="book-name">소년이 온다</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100">
+              <img src="assets/threads/img2.jpg" class="card-img-top thread-img" alt="만년필 필사" />
+              <div class="card-body">
+                <h5 class="card-title">한 문장씩 필사하며 다시 읽기</h5>
+                <p class="card-text">
+                  빠르게 읽을 때는 놓쳤던 문장들이 손으로 옮겨 적으니 비로소
+                  보이더라고요. 하루 한 페이지씩 필사 중인데 벌써 노트 한 권을
+                  채웠습니다.
+                </p>
+              </div>
+              <div class="card-footer d-flex justify-content-between">
+                <span>밤독서</span>
+                <span class="book-name">채식주의자</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100">
+              <img src="assets/threads/img3.jpg" class="card-img-top thread-img" alt="AI 칩" />
+              <div class="card-body">
+                <h5 class="card-title">AI 추천으로 만난 올해의 책</h5>
+                <p class="card-text">
+                  평소라면 고르지 않았을 책인데 AI 추천 목록에 있길래 읽어봤어요.
+                  내 독서 기록을 보고 골라줬다는 게 신기할 만큼 취향에 딱 맞았습니다.
+                </p>
+              </div>
+              <div class="card-footer d-flex justify-content-between">
+                <span>새벽서재</span>
+                <span class="book-name">대온실 수리 보고서</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100">
+              <img src="assets/threads/img4.jpg" class="card-img-top thread-img" alt="구겨진 종이와 종이비행기" />
+              <div class="card-body">
+                <h5 class="card-title">다 포기하고 싶던 날 읽은 책</h5>
+                <p class="card-text">
+                  계획했던 일이 모두 엎어진 날, 우연히 집어 든 책이었어요. 거센
+                  물살 같은 이야기 속에서 이상하게 위로를 받았습니다.
+                </p>
+              </div>
+              <div class="card-footer d-flex justify-content-between">
+                <span>종이비행기</span>
+                <span class="book-name">급류</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100">
+              <img src="assets/threads/img5.jpg" class="card-img-top thread-img" alt="야외에서 메모하는 사람" />
+              <div class="card-body">
+                <h5 class="card-title">공원 벤치에서 쓴 독서 노트</h5>
+                <p class="card-text">
+                  날씨가 좋아서 책과 노트를 들고 공원에 나갔어요. 등장인물들의
+                  관계도를 그려가며 읽으니 훨씬 몰입이 잘 되더라고요.
+                </p>
+              </div>
+              <div class="card-footer d-flex justify-content-between">
+                <span>산책하는독자</span>
+                <span class="book-name">노르웨이의 숲</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-lg-4">
+            <div class="card h-100">
+              <img src="assets/threads/img6.jpg" class="card-img-top thread-img" alt="아침 식탁과 태블릿" />
+              <div class="card-body">
+                <h5 class="card-title">주말 아침 30분 독서 루틴</h5>
+                <p class="card-text">
+                  주말마다 아침을 먹으며 30분씩 책을 읽고 있어요. 짧은 시간이지만
+                  한 달이 지나니 두 권을 끝냈습니다. 같이 루틴 만들어요!
+                </p>
+              </div>
+              <div class="card-footer d-flex justify-content-between">
+                <span>아침책상</span>
+                <span class="book-name">시간의 계곡</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Pagination -->
+      <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mt-4">
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+          </li>
+          <li class="page-item active" aria-current="page">
+            <a class="page-link" href="#">1</a>
+          </li>
+          <li class="page-item"><a class="page-link" href="#">2</a></li>
+          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <li class="page-item">
+            <a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+          </li>
+        </ul>
+      </nav>
+    </section>
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

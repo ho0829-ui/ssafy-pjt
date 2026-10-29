@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static humanize book_extras %}
+
+{% block title %}{% if genre %}{{ genre.name }} 베스트셀러{% elif query %}"{{ query }}" 검색 결과{% else %}도서 검색{% endif %} - ThRead{% endblock title %}
+{% block body_class %}page-search{% endblock body_class %}
+
+{% block content %}
+<!-- 상단 띠: Navbar(흰 글씨)가 보이도록 어두운 배경 -->
+<section class="search-hero"{% if genre %} style="--hero: url('{% static genre.image %}')"{% endif %}>
+  <div class="search-hero-bg" aria-hidden="true"></div>
+  <div class="container search-hero-inner">
+    {% if genre %}
+    <p class="search-eyebrow">장르</p>
+    <h1 class="search-heading">{{ genre.name }}</h1>
+    <p class="search-sub">알라딘 ‘{{ genre.category_label }}’ 분야 베스트셀러</p>
+    <nav class="d-flex flex-wrap gap-2 mt-3" aria-label="장르 목록">
+      {% for g in genres %}
+      <a class="search-chip search-chip-dark{% if g.slug == genre.slug %} is-active{% endif %}"
+         href="{% url 'books:genre' g.slug %}"{% if g.slug == genre.slug %} aria-current="page"{% endif %}>{{ g.name }}</a>
+      {% endfor %}
+    </nav>
+    {% else %}
+    <h1 class="search-heading">도서 검색</h1>
+    <form class="search-form search-form-page" action="{% url 'books:search' %}" method="get" role="search">
+      <i class="bi bi-search" aria-hidden="true"></i>
+      <input type="search" name="q" value="{{ query }}" class="form-control"
+             placeholder="제목, 저자, 출판사로 검색" maxlength="100" autocomplete="off" aria-label="검색어" required />
+      <input type="hidden" name="sort" value="{{ sort }}" />
+      <button type="submit" class="btn btn-brand">검색</button>
+      <!-- 검색 범위: 바꾸면 같은 검색어로 바로 다시 검색 -->
+      <div class="search-types" role="radiogroup" aria-label="검색 범위">
+        {% for key, label in query_types.items %}
+        <input type="radio" class="btn-check" name="type" id="type-{{ key }}" value="{{ key }}"
+               {% if key == query_type %}checked{% endif %} />
+        <label class="search-pill" for="type-{{ key }}">{{ label }}</label>
+        {% endfor %}
+      </div>
+    </form>
+    {% endif %}
+  </div>
+</section>
+
+<section class="search-results container">
+  {% if result %}
+    {% if result.from_db %}
+    <div class="search-notice">
+      <i class="bi bi-info-circle me-1"></i>알라딘에 연결할 수 없어 저장된 도서에서만 찾았어요.
+    </div>
+    {% endif %}
+
+    <div class="search-summary">
+      <p class="mb-0">
+        {% if genre %}<strong>{{ genre.name }}</strong> 베스트셀러{% else %}<strong>“{{ query }}”</strong>{% if query_type != 'all' %} {{ query_type_label }}{% endif %} 검색 결과{% endif %}
+        <span class="text-muted">{{ result.total|intcomma }}권</span>
+        {% if result.scanned %}<span class="text-muted small">(알라딘 관련도 상위 {{ result.scanned }}권 중 {{ query_type_label }} 일치)</span>
+        {% elif result.total > 200 and not result.from_db %}<span class="text-muted small">(상위 200권까지 표시)</span>{% endif %}
+      </p>
+      {% if not genre %}
+      <nav class="search-sorts" aria-label="정렬">
+        {% for key, label in sorts.items %}
+        <a href="{% querystring sort=key page=None %}"{% if key == sort %} class="is-active" aria-current="true"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </nav>
+      {% endif %}
+    </div>
+
+    {% if result.books %}
+    <ol class="result-list list-unstyled">
+      {% for book in result.books %}
+      <li class="reveal" style="--i: {% cycle 0 1 2 3 %}">
+        <a class="result-item" href="{% url 'books:detail' book.isbn13 %}">
+          <img class="result-cover" src="{{ book.cover_url }}" alt="" loading="lazy" />
+          <div class="result-body">
+            <h2 class="result-title">{{ book.title|highlight:query }}</h2>
+            {% if book.subtitle %}<p class="result-subtitle">{{ book.subtitle }}</p>{% endif %}
+            <p class="result-meta">
+              {{ book.author_display|highlight:query }}
+              {% if book.publisher %}<span>·</span> {{ book.publisher|highlight:query }}{% endif %}
+              {% if book.pub_date %}<span>·</span> {{ book.pub_date|date:"Y" }}{% endif %}
+              {% if book.rating_score %}<span class="result-rating"><i class="bi bi-star-fill"></i> {{ book.rating_score }}</span>{% endif %}
+            </p>
+            {% if book.description %}<p class="result-desc">{{ book.description }}</p>{% endif %}
+          </div>
+          <i class="bi bi-chevron-right result-arrow" aria-hidden="true"></i>
+        </a>
+      </li>
+      {% endfor %}
+    </ol>
+
+    {% if result.num_pages > 1 %}
+    <nav aria-label="검색 결과 페이지">
+      <ul class="pagination justify-content-center search-pagination">
+        {% if result.page > 1 %}
+        <li class="page-item"><a class="page-link" href="{% querystring page=result.page|add:-1 %}" aria-label="이전 페이지">&laquo;</a></li>
+        {% endif %}
+        {% for number in page_range %}
+        <li class="page-item{% if number == result.page %} active{% endif %}"{% if number == result.page %} aria-current="page"{% endif %}>
+          <a class="page-link" href="{% querystring page=number %}">{{ number }}</a>
+        </li>
+        {% endfor %}
+        {% if result.page < result.num_pages %}
+        <li class="page-item"><a class="page-link" href="{% querystring page=result.page|add:1 %}" aria-label="다음 페이지">&raquo;</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="search-empty">
+      <i class="bi bi-journal-x"></i>
+      <p class="fw-semibold mt-3 mb-1">{% if genre %}이 장르의 도서를 불러오지 못했어요{% else %}‘{{ query }}’에 대한 결과가 없어요{% endif %}</p>
+      <p class="text-muted small">다른 검색어나 검색 범위로 다시 찾아보세요.</p>
+      {% include 'books/includes/search_suggestions.html' %}
+    </div>
+    {% endif %}
+
+  {% else %}
+  <!-- 검색어 없이 들어왔을 때 -->
+  <div class="search-empty">
+    <i class="bi bi-search"></i>
+    <p class="fw-semibold mt-3 mb-1">어떤 책을 찾고 있나요?</p>
+    <p class="text-muted small">제목, 저자, 출판사로 검색하거나 장르로 둘러보세요.</p>
+    {% include 'books/includes/search_suggestions.html' %}
+    <div class="d-flex flex-wrap justify-content-center gap-2 mt-3">
+      {% for g in all_genres %}
+      <a class="search-chip" href="{% url 'books:genre' g.slug %}">{{ g.name }}</a>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</section>
+{% endblock content %}

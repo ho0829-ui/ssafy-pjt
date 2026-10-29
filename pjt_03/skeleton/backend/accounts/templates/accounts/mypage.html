@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}마이페이지 - ThRead{% endblock title %}
+{% block body_class %}page-mypage{% endblock body_class %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}" />
+<link rel="stylesheet" href="{% static 'css/mypage.css' %}" />
+{% endblock extra_head %}
+
+{% block content %}
+<!-- 상단: 프로필 + 숫자 -->
+<section class="search-hero mypage-hero">
+  <div class="search-hero-bg" aria-hidden="true"></div>
+  <div class="container search-hero-inner">
+    <div class="mypage-profile">
+      <span class="mypage-avatar" aria-hidden="true">{{ user.nickname|slice:":1" }}</span>
+      <div>
+        <h1 class="search-heading mb-1">{{ user.nickname }}</h1>
+        <p class="search-sub mb-0">{{ user.date_joined|date:"Y.m.d" }} 가입</p>
+      </div>
+    </div>
+    <dl class="mypage-stats">
+      <div><dt>담은 책</dt><dd data-stat="archives">{{ stats.archives }}</dd></div>
+      <div><dt>쓰레드</dt><dd>{{ stats.threads }}</dd></div>
+      <div><dt>받은 좋아요</dt><dd>{{ stats.likes_received }}</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- 탭: 주소(?tab=)로 나눔 -->
+<nav class="mypage-tabs" aria-label="마이페이지 메뉴">
+  <div class="container">
+    {% for key, label in tabs.items %}
+    <a href="?tab={{ key }}"{% if key == tab %} class="is-active" aria-current="page"{% endif %}>{{ label }}</a>
+    {% endfor %}
+  </div>
+</nav>
+
+<section class="container mypage-body{% if tab != 'settings' %} thread{% endif %}">
+  {% if tab == 'books' %}
+    {% if page.object_list %}
+    <ul class="shelf list-unstyled">
+      {% for archive in page.object_list %}
+      <li class="shelf-item">
+        <a href="{% url 'books:detail' archive.book.isbn13 %}">
+          <img src="{{ archive.book.cover_url }}" alt="{{ archive.book.title }}" loading="lazy" />
+          <span class="shelf-title">{{ archive.book.title }}</span>
+          <span class="shelf-date">{{ archive.created_at|date:"Y.m.d" }} 담음</span>
+        </a>
+        <button type="button" class="shelf-remove" data-archive-remove="{% url 'books:archive' archive.book.isbn13 %}"
+                aria-label="『{{ archive.book.title }}』 빼기">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </li>
+      {% endfor %}
+    </ul>
+    {% include 'accounts/includes/mypage_pagination.html' %}
+    {% else %}
+    <div class="search-empty">
+      <i class="bi bi-archive"></i>
+      <p class="fw-semibold mt-3 mb-1">아직 담은 책이 없어요</p>
+      <p class="text-muted small">책 상세 페이지의 "담기"를 누르면 여기에 모여요.</p>
+      <button type="button" class="btn btn-brand rounded-pill px-4 mt-2" data-bs-toggle="modal" data-bs-target="#searchModal">
+        <i class="bi bi-search me-1"></i>도서 검색하기
+      </button>
+    </div>
+    {% endif %}
+
+  {% elif tab == 'threads' or tab == 'likes' %}
+    {% if page.object_list %}
+    <div class="row g-4">
+      {% for thread in page.object_list %}
+      <div class="col-12 col-sm-6 col-lg-4">
+        {% include 'threads/includes/thread_card.html' %}
+      </div>
+      {% endfor %}
+    </div>
+    {% include 'accounts/includes/mypage_pagination.html' %}
+    {% else %}
+    <div class="search-empty">
+      <i class="bi {% if tab == 'threads' %}bi-chat-square-text{% else %}bi-heart{% endif %}"></i>
+      <p class="fw-semibold mt-3 mb-1">{% if tab == 'threads' %}아직 쓴 쓰레드가 없어요{% else %}아직 좋아요한 쓰레드가 없어요{% endif %}</p>
+      <a class="btn btn-brand rounded-pill px-4 mt-2" href="{% url 'threads:list' %}">쓰레드 둘러보기</a>
+    </div>
+    {% endif %}
+
+  {% else %}
+  <!-- 설정 -->
+  <div class="settings">
+    <form class="settings-card" method="post" action="{% url 'mypage:nickname' %}" novalidate>
+      {% csrf_token %}
+      <h2>닉네임 변경</h2>
+      {% include 'accounts/includes/field.html' with field=nickname_form.nickname %}
+      <button type="submit" class="btn btn-brand rounded-pill px-4">저장</button>
+    </form>
+
+    <form class="settings-card" method="post" action="{% url 'mypage:password' %}" novalidate>
+      {% csrf_token %}
+      <h2>비밀번호 변경</h2>
+      {% for field in password_form %}
+      {% include 'accounts/includes/field.html' %}
+      {% endfor %}
+      <button type="submit" class="btn btn-brand rounded-pill px-4">비밀번호 바꾸기</button>
+    </form>
+
+    <form class="settings-card settings-danger" method="post" action="{% url 'mypage:delete' %}" novalidate>
+      {% csrf_token %}
+      <h2>회원 탈퇴</h2>
+      <p class="text-muted small">
+        탈퇴하면 계정과 함께 작성한 쓰레드 <strong>{{ stats.threads }}개</strong>, 담은 책
+        <strong>{{ stats.archives }}권</strong>, 누른 좋아요가 모두 삭제되고 되돌릴 수 없어요.
+      </p>
+      {% include 'accounts/includes/field.html' with field=delete_form.password %}
+      <button type="submit" class="btn btn-outline-danger rounded-pill px-4">탈퇴하기</button>
+    </form>
+  </div>
+  {% endif %}
+</section>
+{% endblock content %}

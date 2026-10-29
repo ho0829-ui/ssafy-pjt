@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if book %}『{{ book.title }}』 쓰레드{% else %}쓰레드{% endif %} - ThRead{% endblock title %}
+{% block body_class %}page-threads{% endblock body_class %}
+
+{% block content %}
+<section class="search-hero">
+  <div class="search-hero-bg" aria-hidden="true"{% if book %} style="--hero: url('{{ book.cover_url }}')"{% endif %}></div>
+  <div class="container search-hero-inner">
+    <p class="search-eyebrow">{% if book %}『{{ book.title }}』에 대한{% else %}ThRead 커뮤니티{% endif %}</p>
+    <h1 class="search-heading">쓰레드</h1>
+    <p class="search-sub">책을 읽고 떠오른 생각을 나누는 곳이에요.</p>
+  </div>
+</section>
+
+<section class="thread threads-page container">
+  <div class="search-summary">
+    <div class="d-flex flex-wrap align-items-center gap-2">
+      <span class="text-muted">{{ page.paginator.count }}개</span>
+      {% if book %}
+      <a class="search-chip" href="{% url 'threads:list' %}" title="필터 해제">
+        {{ book.title|truncatechars:20 }} <i class="bi bi-x"></i>
+      </a>
+      {% endif %}
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <nav class="search-sorts" aria-label="정렬">
+        {% for key, label in sorts.items %}
+        <a href="{% querystring sort=key page=None %}"{% if key == sort %} class="is-active" aria-current="true"{% endif %}>{{ label }}</a>
+        {% endfor %}
+      </nav>
+      {% if book %}
+      <a class="btn btn-brand btn-sm rounded-pill px-3" href="{% url 'threads:create' %}?book={{ book.isbn13 }}">
+        <i class="bi bi-pencil-square me-1"></i>쓰레드 작성
+      </a>
+      {% else %}
+      <!-- 쓰레드는 책에 대해 쓰므로 검색 오버레이로 책부터 고르게 한다 -->
+      <button type="button" class="btn btn-brand btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#searchModal"
+              data-search-hint="어떤 책에 대한 쓰레드를 쓸까요?">
+        <i class="bi bi-pencil-square me-1"></i>쓰레드 작성
+      </button>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if page.object_list %}
+  <div class="row g-4 mt-1">
+    {% for thread in page.object_list %}
+    <div class="col-12 col-sm-6 col-lg-4 reveal" style="--i: {% cycle 0 1 2 %}">
+      {% include 'threads/includes/thread_card.html' %}
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if page.paginator.num_pages > 1 %}
+  <nav aria-label="쓰레드 페이지">
+    <ul class="pagination justify-content-center search-pagination">
+      {% if page.has_previous %}
+      <li class="page-item"><a class="page-link" href="{% querystring page=page.previous_page_number %}" aria-label="이전 페이지">&laquo;</a></li>
+      {% endif %}
+      {% for number in page.paginator.page_range %}
+      <li class="page-item{% if number == page.number %} active{% endif %}"{% if number == page.number %} aria-current="page"{% endif %}>
+        <a class="page-link" href="{% querystring page=number %}">{{ number }}</a>
+      </li>
+      {% endfor %}
+      {% if page.has_next %}
+      <li class="page-item"><a class="page-link" href="{% querystring page=page.next_page_number %}" aria-label="다음 페이지">&raquo;</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+  {% endif %}
+
+  {% else %}
+  <div class="search-empty">
+    <i class="bi bi-chat-square-text"></i>
+    <p class="fw-semibold mt-3 mb-1">아직 쓰레드가 없어요</p>
+    <p class="text-muted small">첫 번째 쓰레드를 남겨 보세요.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock content %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}로그인 - ThRead{% endblock title %}
+{% block body_class %}page-auth{% endblock body_class %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/auth.css' %}" />{% endblock extra_head %}
+
+{% block content %}
+<section class="auth-hero">
+  <div class="auth-bg" aria-hidden="true"></div>
+  <div class="auth-card enter">
+    <p class="auth-logo"><span class="th">Th</span><span class="read">Read</span></p>
+    <h1 class="auth-title">로그인</h1>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}" />
+      {% if form.non_field_errors %}
+      <div class="auth-alert" role="alert">
+        <i class="bi bi-exclamation-circle me-1"></i>아이디 또는 비밀번호가 맞지 않아요.
+      </div>
+      {% endif %}
+
+      {% include 'accounts/includes/field.html' with field=form.username %}
+      {% include 'accounts/includes/field.html' with field=form.password %}
+
+      <div class="form-check mb-4">
+        {{ form.remember_me }}
+        <label class="form-check-label" for="{{ form.remember_me.id_for_label }}">{{ form.remember_me.label }}</label>
+      </div>
+
+      <button type="submit" class="btn btn-brand w-100 auth-submit">로그인</button>
+    </form>
+
+    <p class="auth-switch">
+      아직 회원이 아니세요?
+      <a href="{% url 'accounts:signup' %}{% if next %}?next={{ next|urlencode }}{% endif %}">회원가입</a>
+    </p>
+  </div>
+</section>
+{% endblock content %}

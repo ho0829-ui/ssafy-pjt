@@ -1,0 +1,11 @@
+{% if page.paginator.num_pages > 1 %}
+<nav aria-label="페이지">
+  <ul class="pagination justify-content-center search-pagination">
+    {% for number in page.paginator.page_range %}
+    <li class="page-item{% if number == page.number %} active{% endif %}"{% if number == page.number %} aria-current="page"{% endif %}>
+      <a class="page-link" href="{% querystring page=number %}">{{ number }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endif %}

@@ -1,0 +1,243 @@
+/* 도서 상세 페이지 전용 스타일 (공통 토큰·Navbar·푸터는 main.css) */
+
+body.page-detail {
+  background: #111;
+}
+
+/* ===== Hero: 전체 화면 + 흐린 표지 배경 ===== */
+.detail-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 7rem 0 4rem;
+  overflow: hidden;
+  color: #fff;
+}
+/* 표지 원본이 작아(182×276) 크게 흐리게 처리해 배경으로 사용 */
+.detail-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--cover) center / cover no-repeat;
+  filter: blur(28px) saturate(1.3);
+  transform: scale(1.2); /* 블러로 생기는 흐린 가장자리를 화면 밖으로 */
+}
+/* 왼쪽은 검정에 가깝게, 오른쪽은 투명에 가깝게 */
+.detail-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.92) 0%,
+    rgba(0, 0, 0, 0.65) 45%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+}
+.detail-hero .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== 왼쪽: 작가 및 도서 소개 ===== */
+.detail-cover {
+  width: 120px;
+  height: 176px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+}
+.meta-chip {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 999px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+.detail-title {
+  font-family: "GmarketSansTTFMedium";
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 1rem 0 0.25rem;
+}
+.detail-author {
+  color: rgba(255, 255, 255, 0.7);
+}
+.btn-archive {
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 999px;
+  color: #fff;
+  padding: 0.5rem 1.25rem;
+  transition: background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+.btn-archive:hover {
+  border-color: #fff;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+.btn-archive.is-archived,
+.btn-archive.is-archived:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.detail-desc {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.8;
+  word-break: keep-all;
+}
+
+/* ===== 오른쪽: 세부 정보 탭 (밝은 유리 카드) ===== */
+.detail-panel {
+  background: rgba(255, 255, 255, 0.78);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  padding: 1.5rem;
+  color: var(--text);
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .detail-panel {
+    background: rgba(255, 255, 255, 0.96);
+  }
+}
+.detail-panel .nav-tabs .nav-link {
+  color: var(--muted);
+  font-family: "SBAggro_L";
+}
+.detail-panel .nav-tabs .nav-link.active {
+  color: var(--brand);
+  background: transparent;
+  border-color: #dee2e6 #dee2e6 transparent;
+}
+.detail-panel .tab-content {
+  min-height: 420px; /* 탭 전환 시 높이가 출렁이지 않도록 */
+}
+.library-map {
+  width: 100%;
+  height: 240px;
+  border: 0;
+  border-radius: var(--radius);
+}
+.library-list .list-group-item,
+.thread-list .list-group-item {
+  background: transparent;
+}
+.thread-list .thread-title {
+  font-weight: 600;
+}
+.thread-list .likes {
+  color: var(--brand);
+  white-space: nowrap;
+}
+/* Pagination: Bootstrap 기본 class보다 높은 명시도 (06-main과 동일) */
+.detail-panel .pagination .page-link {
+  border: none;
+  background-color: transparent;
+  color: var(--text);
+}
+.detail-panel .pagination .page-link:focus {
+  box-shadow: none;
+}
+.detail-panel .pagination .page-item.active .page-link {
+  color: var(--brand);
+  background-color: transparent;
+}
+.btn-brand {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.btn-brand:hover,
+.btn-brand:focus {
+  background: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: #fff;
+}
+
+/* ===== 진입 애니메이션 ===== */
+.enter {
+  animation: fade-up 0.8s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 100ms);
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 575.98px) {
+  .detail-title {
+    font-size: 2.2rem;
+  }
+  .detail-panel {
+    padding: 1rem;
+  }
+  .detail-panel .tab-content {
+    min-height: 0;
+  }
+}
+
+/* ===== 동작 줄이기 ===== */
+@media (prefers-reduced-motion: reduce) {
+  .enter {
+    animation: none;
+  }
+  .btn-archive,
+  .main-nav .nav-link::after {
+    transition: none;
+  }
+}
+
+/* ===== Django 버전에서 추가한 요소 ===== */
+.detail-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  margin-bottom: 0.25rem;
+}
+.meta-chip-brand {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: #fff;
+}
+.detail-meta {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.95rem;
+  margin: 0.75rem 0 1rem;
+}
+.detail-meta .bi-star-fill {
+  color: #ffc94d;
+}
+.detail-meta span {
+  color: rgba(255, 255, 255, 0.55);
+}
+.detail-source {
+  color: rgba(255, 255, 255, 0.45);
+}
+/* 쓰레드 탭 빈 상태 */
+.thread-empty {
+  padding: 4.5rem 1rem;
+}
+.thread-empty .bi {
+  font-size: 2.5rem;
+  color: var(--brand);
+}
+.tab-count {
+  margin-left: 0.15rem;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.75rem;
+}
+.min-w-0 {
+  min-width: 0;
+}

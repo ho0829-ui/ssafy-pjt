@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ thread.title }} - ThRead{% endblock title %}
+{% block body_class %}page-threads{% endblock body_class %}
+
+{% block content %}
+<section class="search-hero thread-hero">
+  <div class="search-hero-bg" aria-hidden="true" style="--hero: url('{{ thread.book.cover_url }}')"></div>
+  <div class="container search-hero-inner">
+    <a class="search-eyebrow thread-back" href="{% url 'threads:list' %}"><i class="bi bi-arrow-left me-1"></i>쓰레드</a>
+    <h1 class="search-heading">{{ thread.title }}</h1>
+    <p class="search-sub">
+      {{ thread.author.nickname }} · {{ thread.created_at|date:"Y.m.d" }}
+      {% if thread.updated_at|date:"YmdHi" != thread.created_at|date:"YmdHi" %}<span class="opacity-75">(수정됨)</span>{% endif %}
+    </p>
+  </div>
+</section>
+
+<section class="container thread-detail">
+  <div class="row g-5">
+    <article class="col-lg-8">
+      {% if thread.image %}
+      <img class="thread-detail-img" src="{{ thread.image.url }}" alt="{{ thread.title }} 첨부 이미지" />
+      {% endif %}
+      <div class="thread-content">{{ thread.content|linebreaksbr }}</div>
+
+      <div class="thread-actions">
+        <button type="button" class="btn thread-like{% if liked %} is-liked{% endif %}"
+                data-url="{% url 'threads:like' thread.pk %}" aria-pressed="{{ liked|yesno:'true,false' }}"
+                aria-label="좋아요">
+          <i class="bi {% if liked %}bi-heart-fill{% else %}bi-heart{% endif %}"></i>
+          <span class="thread-like-count">{{ thread.like_count }}</span>
+        </button>
+        {% if user == thread.author %}
+        <div class="ms-auto d-flex gap-2">
+          <a class="btn btn-outline-secondary btn-sm rounded-pill px-3" href="{% url 'threads:update' thread.pk %}">
+            <i class="bi bi-pencil me-1"></i>수정
+          </a>
+          <button type="button" class="btn btn-outline-danger btn-sm rounded-pill px-3" data-bs-toggle="modal" data-bs-target="#deleteThreadModal">
+            <i class="bi bi-trash me-1"></i>삭제
+          </button>
+        </div>
+        {% endif %}
+      </div>
+    </article>
+
+    <aside class="col-lg-4">
+      <a class="thread-book-card" href="{% url 'books:detail' thread.book.isbn13 %}">
+        <img src="{{ thread.book.cover_url }}" alt="" />
+        <div>
+          <p class="thread-book-label">이 쓰레드의 책</p>
+          <p class="thread-book-title">{{ thread.book.title }}</p>
+          <p class="thread-book-author">{{ thread.book.main_author }}</p>
+        </div>
+      </a>
+      {% if more_threads %}
+      <div class="thread-more">
+        <p class="thread-book-label">이 책의 다른 쓰레드</p>
+        <ul class="list-unstyled mb-0">
+          {% for other in more_threads %}
+          <li>
+            <a href="{{ other.get_absolute_url }}">{{ other.title }}</a>
+            <span><i class="bi bi-heart-fill"></i> {{ other.like_count }}</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </aside>
+  </div>
+</section>
+
+{% if user == thread.author %}
+<!-- 삭제 확인 -->
+<div class="modal fade" id="deleteThreadModal" tabindex="-1" aria-labelledby="deleteThreadLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteThreadLabel">쓰레드 삭제</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      </div>
+      <div class="modal-body text-center py-4">
+        <p class="mb-4">이 쓰레드를 삭제할까요?<br /><span class="text-muted small">삭제하면 되돌릴 수 없어요.</span></p>
+        <button type="button" class="btn btn-outline-secondary px-4 me-2" data-bs-dismiss="modal">취소</button>
+        <form class="d-inline" method="post" action="{% url 'threads:delete' thread.pk %}">
+          {% csrf_token %}
+          <button type="submit" class="btn btn-logout px-4">삭제</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% endblock content %}

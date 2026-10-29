@@ -1,0 +1,24 @@
+{# 쓰레드 카드 (메인 "지금 이 쓰레드", 쓰레드 목록에서 공통 사용) #}
+<div class="card h-100 thread-card">
+  {% if thread.image %}
+  <img src="{{ thread.image.url }}" class="card-img-top thread-img" alt="" loading="lazy" />
+  {% else %}
+  <!-- 이미지가 없으면 책 표지를 흐리게 깔고 가운데에 표지를 보여준다 -->
+  <div class="card-img-top thread-img thread-img-fallback" style="--cover: url('{{ thread.book.cover_url }}')">
+    <img src="{{ thread.book.cover_url }}" alt="" loading="lazy" />
+  </div>
+  {% endif %}
+  <div class="card-body">
+    <h5 class="card-title">
+      <a class="stretched-link" href="{{ thread.get_absolute_url }}">{{ thread.title }}</a>
+    </h5>
+    <p class="card-text">{{ thread.content }}</p>
+  </div>
+  <div class="card-footer d-flex justify-content-between align-items-center gap-2">
+    <span class="text-truncate">
+      {{ thread.author.nickname }}
+      <span class="thread-likes"><i class="bi bi-heart-fill"></i> {{ thread.like_count }}</span>
+    </span>
+    <a class="book-name text-truncate" href="{% url 'books:detail' thread.book.isbn13 %}">{{ thread.book.title }}</a>
+  </div>
+</div>

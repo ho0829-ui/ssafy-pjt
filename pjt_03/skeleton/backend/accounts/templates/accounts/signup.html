@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}회원가입 - ThRead{% endblock title %}
+{% block body_class %}page-auth{% endblock body_class %}
+{% block extra_head %}<link rel="stylesheet" href="{% static 'css/auth.css' %}" />{% endblock extra_head %}
+
+{% block content %}
+<section class="auth-hero">
+  <div class="auth-bg" aria-hidden="true"></div>
+  <div class="auth-card enter">
+    <p class="auth-logo"><span class="th">Th</span><span class="read">Read</span></p>
+    <h1 class="auth-title">회원가입</h1>
+    <p class="auth-lead">읽은 책을 담고, 생각을 쓰레드로 나눠 보세요.</p>
+
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next }}" />
+      {% for field in form %}
+      {% include 'accounts/includes/field.html' %}
+      {% endfor %}
+      <button type="submit" class="btn btn-brand w-100 auth-submit">가입하기</button>
+    </form>
+
+    <p class="auth-switch">
+      이미 회원이세요?
+      <a href="{% url 'accounts:login' %}{% if next %}?next={{ next|urlencode }}{% endif %}">로그인</a>
+    </p>
+  </div>
+</section>
+{% endblock content %}

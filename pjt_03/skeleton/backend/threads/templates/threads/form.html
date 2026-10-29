@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if is_edit %}쓰레드 수정{% else %}쓰레드 작성{% endif %} - ThRead{% endblock title %}
+{% block body_class %}page-threads{% endblock body_class %}
+
+{% block content %}
+<section class="search-hero thread-hero">
+  <div class="search-hero-bg" aria-hidden="true" style="--hero: url('{{ book.cover_url }}')"></div>
+  <div class="container search-hero-inner">
+    <p class="search-eyebrow">『{{ book.title }}』</p>
+    <h1 class="search-heading">{% if is_edit %}쓰레드 수정{% else %}쓰레드 작성{% endif %}</h1>
+  </div>
+</section>
+
+<section class="container thread-form-wrap">
+  <a class="thread-book-card thread-book-card-inline" href="{% url 'books:detail' book.isbn13 %}" target="_blank" rel="noopener">
+    <img src="{{ book.cover_url }}" alt="" />
+    <div>
+      <p class="thread-book-label">이 책에 대한 쓰레드</p>
+      <p class="thread-book-title">{{ book.title }}</p>
+      <p class="thread-book-author">{{ book.author_display }}</p>
+    </div>
+  </a>
+
+  <form method="post" enctype="multipart/form-data" class="thread-form" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="book" value="{{ book.isbn13 }}" />
+    {% for field in form %}
+    <div class="mb-4">
+      <label class="form-label" for="{{ field.id_for_label }}">
+        {{ field.label }}{% if field.name == 'image' %} <span class="text-muted small">(선택, 5MB 이하)</span>{% endif %}
+      </label>
+      {{ field }}
+      {% if field.name != 'image' %}
+      <div class="form-text text-end"><span class="char-count" data-for="{{ field.id_for_label }}">0</span> / {{ field.field.max_length }}</div>
+      {% else %}
+      <img class="thread-image-preview" alt="" hidden />
+      {% endif %}
+      {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+    </div>
+    {% endfor %}
+    <div class="d-flex justify-content-end gap-2">
+      <a class="btn btn-outline-secondary rounded-pill px-4"
+         href="{% if is_edit %}{{ thread.get_absolute_url }}{% else %}{% url 'books:detail' book.isbn13 %}{% endif %}">취소</a>
+      <button type="submit" class="btn btn-brand rounded-pill px-4">{% if is_edit %}수정 완료{% else %}올리기{% endif %}</button>
+    </div>
+  </form>
+</section>
+{% endblock content %}

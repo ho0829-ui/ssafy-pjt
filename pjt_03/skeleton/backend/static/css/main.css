@@ -1,0 +1,852 @@
+/* ===== 디자인 토큰 ===== */
+:root {
+  --brand: #fe4a51;
+  --brand-dark: #e53d44;
+  --text: #333;
+  --muted: #6c757d;
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 14px 30px rgba(0, 0, 0, 0.12);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 0.45s;
+  --section-space: 5rem;
+  --overlap: 160px; /* F309: JS가 베스트셀러 카드 높이의 절반으로 갱신 */
+}
+@media (max-width: 575.98px) {
+  :root {
+    --section-space: 3rem;
+  }
+}
+
+/* ===== 공통 ===== */
+@font-face {
+  font-family: "SBAggro_L";
+  src: url("../fonts/SBAggroOTF_L.ttf") format("truetype");
+}
+@font-face {
+  font-family: "GmarketSansTTFMedium";
+  src: url("../fonts/GmarketSansTTFMedium.ttf") format("truetype");
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  padding: 0;
+  color: var(--text);
+  font-family: "Helvetica Neue", Arial, sans-serif;
+}
+.section-space {
+  padding: var(--section-space) 0;
+}
+.section-title {
+  font-family: "GmarketSansTTFMedium";
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0;
+}
+/* 섹션 제목 아래 강조선 */
+.section-title::after {
+  content: "";
+  display: block;
+  width: 32px;
+  height: 3px;
+  margin-top: 0.6rem;
+  border-radius: 2px;
+  background: var(--brand);
+}
+.text-center .section-title::after {
+  margin-left: auto;
+  margin-right: auto;
+}
+@media (min-width: 992px) {
+  .text-lg-start .section-title::after {
+    margin-left: 0;
+  }
+}
+
+/* ===== 1. Navbar ===== */
+.main-nav {
+  z-index: 1030;
+}
+.main-nav .logo {
+  font-family: "GmarketSansTTFMedium";
+  font-size: 1.6rem;
+}
+.main-nav .logo .th {
+  color: #fff;
+}
+.main-nav .logo .read {
+  color: var(--brand);
+}
+.main-nav .nav-link {
+  font-family: "SBAggro_L";
+  color: #fff;
+}
+.main-nav .nav-link:hover,
+.main-nav .nav-link:focus {
+  color: var(--brand);
+}
+
+/* ===== 1. Hero ===== */
+.hero-section {
+  min-height: 80vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #fff;
+}
+.hero-section img.hero-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 1;
+}
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+.hero-content {
+  position: relative;
+  z-index: 3;
+}
+.hero-title {
+  font-family: "GmarketSansTTFMedium";
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  background: rgba(74, 74, 74, 0.6);
+  border-radius: 0.2rem;
+  padding: 0 1rem;
+  word-break: keep-all;
+}
+.hero-subtitle {
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+.hero-subtitle .th {
+  color: #fff;
+  font-family: "GmarketSansTTFMedium";
+}
+.hero-subtitle .read {
+  color: var(--brand);
+  font-family: "GmarketSansTTFMedium";
+}
+
+/* ===== 2. 베스트셀러 ===== */
+/* 헤더: 제목 + "1 / 3" + 이전/다음 버튼 (화살표를 책 양옆에서 헤더로 옮김) */
+.bestseller-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.carousel-counter {
+  margin-right: 0.25rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.carousel-counter strong {
+  color: var(--text);
+}
+.carousel-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--text);
+  transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
+}
+.carousel-nav-btn:hover {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.carousel-nav-btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+.bestseller .carousel-inner {
+  padding: 1rem 0 1.5rem; /* hover로 떠오른 표지의 그림자가 잘리지 않도록 */
+}
+.book-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 0 auto;
+  max-width: calc(150px * 4 + 1.5rem * 3); /* 한 줄에 4권 */
+}
+.book {
+  position: relative;
+  width: 150px;
+}
+.book-cover {
+  width: 150px;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+.book-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+.book-rank {
+  position: absolute;
+  top: -0.5rem;
+  left: -0.5rem;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  box-shadow: var(--shadow-sm);
+}
+.book-title {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-align: center;
+}
+.book-author {
+  margin: 0.1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+}
+/* 4권이 한 줄에 들어가지 않는 폭에서는 2×2로 배치 */
+@media (max-width: 991.98px) {
+  .book-row {
+    max-width: calc(150px * 2 + 1.5rem);
+  }
+}
+/* 모바일: 2권이 나란히 들어가도록 간격 축소 */
+@media (max-width: 575.98px) {
+  .book-row {
+    gap: 1rem;
+    max-width: calc(150px * 2 + 1rem);
+  }
+}
+
+/* ===== 3. AI 추천 ===== */
+.ai-recommendation {
+  width: 80%;
+  margin: 0 auto;
+}
+.ai-book {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+}
+.ai-book-main {
+  width: 140px;
+  height: 210px;
+}
+/* "활동 데이터 기반" 강조 */
+.highlight {
+  color: var(--brand);
+  font-family: "SBAggro_L";
+  font-size: 1.3rem;
+}
+/* 모바일: 비율(2:3)을 유지한 채 폭에 맞춰 축소 */
+@media (max-width: 575.98px) {
+  .ai-book {
+    width: 28%;
+    height: auto;
+    aspect-ratio: 2 / 3;
+  }
+  .ai-book-main {
+    width: 33%;
+  }
+}
+
+/* ===== 4. 장르별 도서 목록 (심화 F310: CSS Grid 벤토) ===== */
+.genre-books {
+  width: 80%;
+  margin: 0 auto;
+}
+.genre-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 160px;
+  gap: 1rem;
+  grid-template-areas:
+    "art art sci his"
+    "art art sci his"
+    "eco eco tra bab"
+    "phi rom you you"
+    "phi rom hea hea";
+}
+.genre-art { grid-area: art; }
+.genre-sci { grid-area: sci; }
+.genre-his { grid-area: his; }
+.genre-eco { grid-area: eco; }
+.genre-tra { grid-area: tra; }
+.genre-bab { grid-area: bab; }
+.genre-phi { grid-area: phi; }
+.genre-rom { grid-area: rom; }
+.genre-you { grid-area: you; }
+.genre-hea { grid-area: hea; }
+
+.genre-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.5rem;
+  text-decoration: none; /* 타일 전체가 장르 페이지 링크 */
+}
+.genre-item:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 3px;
+}
+.genre-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* 장르명이 잘 보이도록 하단에 옅은 그라데이션 */
+.genre-item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent 50%);
+}
+.genre-name {
+  position: absolute;
+  left: 1rem;
+  bottom: 0.75rem;
+  z-index: 1;
+  color: #fff;
+  font-family: "SBAggro_L";
+  font-size: 1.1rem;
+}
+/* 대표 타일(예술) 강조 */
+.genre-art .genre-name {
+  left: 1.25rem;
+  bottom: 1.25rem;
+  font-size: 1.8rem;
+}
+.genre-badge {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-family: "SBAggro_L";
+  font-size: 0.8rem;
+}
+/* 태블릿·모바일: 2열 벤토 */
+@media (max-width: 991.98px) {
+  .genre-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 140px;
+    grid-template-areas:
+      "art art"
+      "art art"
+      "sci his"
+      "sci his"
+      "eco eco"
+      "tra bab"
+      "phi rom"
+      "phi rom"
+      "you you"
+      "hea hea";
+  }
+}
+@media (max-width: 575.98px) {
+  .genre-grid {
+    grid-auto-rows: 110px;
+    gap: 0.75rem;
+  }
+  .genre-art .genre-name {
+    font-size: 1.4rem;
+  }
+}
+
+/* ===== 5. 인기 쓰레드 ===== */
+.popular-thread,
+.thread-list {
+  width: 80%;
+  margin: 0 auto;
+}
+.section-subtitle {
+  font-size: 1rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+}
+.thread-img {
+  height: 200px;
+  object-fit: cover;
+}
+.thread .card-title {
+  font-weight: 700;
+}
+.thread .card-text {
+  color: #555;
+  display: -webkit-box;
+  -webkit-line-clamp: 3; /* 본문 3줄 말줄임 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.thread .card-footer {
+  background: #fff;
+  font-size: 0.9rem;
+}
+.thread .book-name {
+  color: var(--brand);
+  text-decoration: none;
+}
+.thread a.book-name:hover {
+  text-decoration: underline;
+}
+/* Pagination: Bootstrap 기본 class보다 높은 명시도 */
+.thread .pagination .page-link {
+  border: none;
+  background-color: transparent;
+  color: var(--text);
+}
+.thread .pagination .page-link:focus {
+  box-shadow: none;
+}
+.thread .pagination .page-item.active .page-link {
+  color: var(--brand);
+  background-color: transparent;
+}
+
+/* ===== 푸터 ===== */
+.site-footer {
+  background: #222;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+.site-footer .logo {
+  font-family: "GmarketSansTTFMedium";
+  font-size: 1.2rem;
+}
+.site-footer .logo .th {
+  color: #fff;
+}
+.site-footer .logo .read {
+  color: var(--brand);
+}
+
+/* ===== 로그아웃 Modal ===== */
+.btn-logout {
+  background-color: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.btn-logout:hover,
+.btn-logout:focus {
+  background-color: var(--brand-dark);
+  border-color: var(--brand-dark);
+  color: #fff;
+}
+
+/* ================================================= */
+/* ===== 심화: 모던 디자인 1단계 (동적 요소) ===== */
+/* ================================================= */
+
+/* --- Hero: 켄 번즈 + 텍스트 등장 --- */
+.hero-section {
+  overflow: hidden;
+}
+.hero-section img.hero-img {
+  animation: kenburns 20s ease-out forwards;
+}
+.hero-title,
+.hero-subtitle {
+  animation: fade-up 0.9s var(--ease) both;
+}
+.hero-subtitle {
+  animation-delay: 0.2s;
+}
+@keyframes kenburns {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.08);
+  }
+}
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* --- 스크롤 등장 (JS가 있을 때만 숨김) --- */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+  transition-delay: calc(var(--i, 0) * 80ms);
+}
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- 카드·이미지 모양 --- */
+.book-cover,
+.ai-book {
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+.genre-item {
+  border-radius: var(--radius);
+}
+.thread .card {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.thread .card-footer {
+  border-top: 1px solid #f0f0f0;
+}
+
+/* --- Hover 마이크로 인터랙션 --- */
+.book-cover,
+.book-rank,
+.ai-book,
+.thread .card {
+  transition: transform var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.genre-item img,
+.thread-img {
+  transition: transform 0.6s var(--ease);
+}
+.genre-item::after {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.75), transparent 60%);
+  opacity: 0.8;
+  transition: opacity var(--dur) var(--ease);
+}
+.genre-name {
+  transition: transform var(--dur) var(--ease);
+}
+.main-nav .nav-link {
+  position: relative;
+}
+.main-nav .nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0.5rem;
+  right: 0.5rem;
+  bottom: 0.2rem;
+  height: 2px;
+  background: var(--brand);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s var(--ease);
+}
+/* 마우스가 있는 기기에서만 hover 효과 적용 */
+@media (hover: hover) {
+  .book:hover .book-cover,
+  .ai-book:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+  }
+  .book:hover .book-rank {
+    transform: translateY(-6px);
+  }
+  .book-link:hover .book-title {
+    color: var(--brand);
+  }
+  .genre-item:hover img {
+    transform: scale(1.06);
+  }
+  .genre-item:hover::after {
+    opacity: 1;
+  }
+  .genre-item:hover .genre-name {
+    transform: translateY(-4px);
+  }
+  .thread .card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+  .thread .card:hover .thread-img {
+    transform: scale(1.05);
+  }
+  .main-nav .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* ================================================= */
+/* ===== 심화 F309: 베스트셀러 글래스모피즘 오버랩 ===== */
+/* ================================================= */
+
+/* Hero: 카드에 가려지는 만큼 늘려서, 가려지지 않는 영역은 항상 80vh 유지 */
+.hero-section {
+  min-height: calc(80vh + var(--overlap));
+  padding-bottom: var(--overlap);
+}
+/* 카드 높이의 절반만큼 위로 끌어올림 (아래 섹션도 함께 올라옴) */
+.bestseller {
+  position: relative;
+  z-index: 5;
+  margin-top: calc(-1 * var(--overlap));
+}
+.bestseller-glass {
+  background: rgba(255, 255, 255, 0.72);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  padding: 2rem 1.5rem;
+}
+/* 블러를 지원하지 않는 브라우저: 거의 불투명한 흰 카드 */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .bestseller-glass {
+    background: rgba(255, 255, 255, 0.95);
+  }
+}
+@media (max-width: 575.98px) {
+  .bestseller-glass {
+    padding: 1.5rem 0.5rem; /* 2권(316px)이 나란히 들어갈 폭 확보 */
+  }
+  .bestseller-head {
+    padding: 0 0.5rem;
+  }
+}
+
+/* --- 동작 줄이기 설정 사용자: 모든 움직임 끄기 --- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .hero-section img.hero-img,
+  .hero-title,
+  .hero-subtitle {
+    animation: none;
+  }
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .book-cover,
+  .ai-book,
+  .thread .card,
+  .genre-item img,
+  .thread-img,
+  .genre-name {
+    transition: none;
+    transform: none !important;
+  }
+}
+
+/* ===== 4단계: 로그인 상태 Navbar · 알림 토스트 ===== */
+.nav-nickname {
+  margin-left: 0.25rem;
+  font-size: 0.8rem;
+  opacity: 0.75;
+}
+.main-nav .nav-signup {
+  margin-left: 0.25rem;
+  padding-left: 0.9rem !important;
+  padding-right: 0.9rem !important;
+  border: 1px solid var(--brand);
+  border-radius: 999px;
+}
+.main-nav .nav-signup::after {
+  display: none; /* 테두리 버튼에는 밑줄 효과 없음 */
+}
+.main-nav .nav-signup:hover {
+  background: var(--brand);
+  color: #fff;
+}
+.thread-toast {
+  border: 0;
+  border-radius: var(--radius);
+  background: rgba(33, 33, 40, 0.92);
+  color: #fff;
+  box-shadow: var(--shadow-md);
+}
+.thread-toast .bi-check-circle-fill {
+  color: #5fd38d;
+}
+.thread-toast .bi-info-circle-fill {
+  color: #7cc4ff;
+}
+.thread-toast .btn-close {
+  filter: invert(1);
+}
+
+/* ===== AI 추천 (검색어 → Claude → 알라딘 3권) ===== */
+.ai-form {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+}
+.ai-form .form-control {
+  height: 46px;
+  border-radius: 999px;
+  padding-left: 1.1rem;
+}
+.ai-form .form-control:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 0.2rem rgba(254, 74, 81, 0.15);
+}
+.ai-form .btn {
+  flex: 0 0 auto;
+  height: 46px;
+  padding: 0 1.25rem;
+  border-radius: 999px;
+}
+.ai-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.75rem;
+}
+.ai-examples .search-chip {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
+}
+.ai-login-hint {
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.ai-login-hint a {
+  color: var(--brand);
+  font-weight: 600;
+}
+.ai-result {
+  margin-top: 2.5rem;
+}
+.ai-result-head {
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.ai-result-head .ai-keyword {
+  display: inline-block;
+  margin-left: 0.35rem;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  background: #f3f3f5;
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+.ai-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+.ai-card {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
+  color: inherit;
+  text-decoration: none;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.ai-card img {
+  flex: 0 0 76px;
+  width: 76px;
+  height: 112px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+.ai-card-title {
+  font-weight: 700;
+  margin: 0 0 0.15rem;
+}
+.ai-card-meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin: 0 0 0.5rem;
+}
+.ai-card-reason {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  margin: 0;
+  word-break: keep-all;
+}
+.ai-result-note {
+  margin: 1rem 0 0;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.ai-result-error {
+  color: #b4363b;
+}
+/* 로딩: 회색 카드 3개가 은은하게 깜빡임 */
+.ai-card.is-skeleton {
+  height: 144px;
+  background: linear-gradient(90deg, #f1f1f3 25%, #f8f8fa 50%, #f1f1f3 75%) 0 0 / 200% 100%;
+  box-shadow: none;
+  animation: ai-shimmer 1.4s linear infinite;
+}
+@keyframes ai-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@media (hover: hover) {
+  .ai-card:not(.is-skeleton):hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-md);
+  }
+}
+@media (max-width: 991.98px) {
+  .ai-cards {
+    grid-template-columns: 1fr;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ai-card.is-skeleton {
+    animation: none;
+  }
+}
+.ai-recommendation {
+  word-break: keep-all; /* 한글이 단어 중간에서 끊기지 않도록 */
+}

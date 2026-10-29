@@ -1,0 +1,172 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ThRead - AI 기반 도서 분석 및 창작 지원 통합 솔루션 서비스{% endblock title %}
+
+{% block content %}
+<!-- 1. Hero -->
+<section class="hero-section">
+  <img src="{% static 'images/hero/hero_image.jpg' %}" alt="Hero Image" class="hero-img" />
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1 class="hero-title">
+      AI 기반 도서 분석 및<br class="d-sm-none" />
+      창작 지원 통합 솔루션 서비스
+    </h1>
+    <div class="hero-subtitle">
+      <span class="th">Th</span><span class="read">Read</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 베스트셀러 (알라딘 주간 베스트셀러, DB에서 순위순) -->
+<section id="bestseller" class="bestseller">
+  <div class="container bestseller-container">
+    <!-- 글래스모피즘 카드 (F309: Hero 위에 절반 걸침) -->
+    <div class="bestseller-glass reveal">
+      <!-- 헤더: 제목 + 슬라이드 위치 + 이전/다음 버튼 -->
+      <div class="bestseller-head">
+        <h3 class="section-title">베스트셀러</h3>
+        {% if slides|length > 1 %}
+        <div class="carousel-nav">
+          <span class="carousel-counter" aria-live="polite"><strong>1</strong> / {{ slides|length }}</span>
+          <button class="carousel-nav-btn" type="button" data-bs-target="#bestsellerCarousel" data-bs-slide="prev" aria-label="이전 슬라이드">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <button class="carousel-nav-btn" type="button" data-bs-target="#bestsellerCarousel" data-bs-slide="next" aria-label="다음 슬라이드">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+        {% endif %}
+      </div>
+
+      {% if slides %}
+      <div id="bestsellerCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          {% for slide in slides %}
+          <div class="carousel-item{% if forloop.first %} active{% endif %}">
+            <div class="book-row">
+              {% for book in slide %}
+              <a class="book book-link" href="{% url 'books:detail' book.isbn13 %}">
+                <span class="book-rank">{{ book.bestseller_rank }}</span>
+                <img src="{{ book.cover_url }}" alt="{{ book.title }}" class="book-cover" loading="lazy" />
+                <p class="book-title text-truncate">{{ book.title }}</p>
+                <p class="book-author text-truncate">{{ book.main_author }}</p>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% else %}
+      <p class="text-muted text-center py-5 mb-0">
+        도서 데이터가 없어요. <code>python manage.py loaddata books</code> 또는
+        <code>python manage.py import_books</code>를 실행해 주세요.
+      </p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- 3. AI 추천 -->
+<section id="ai-recommendation" class="section-space">
+  <div class="ai-recommendation">
+    <div class="row align-items-center reveal">
+      <!-- 좌측: 도서 이미지 영역 (7) -->
+      <div class="col-lg-7 mb-4 mb-lg-0">
+        <div class="d-flex justify-content-center align-items-start gap-3">
+          <img
+            src="{% static 'images/ai_recommendation/img1.jpeg' %}"
+            alt="Bauhaus"
+            class="ai-book mt-3"
+          />
+          <img
+            src="{% static 'images/ai_recommendation/img2.jpeg' %}"
+            alt="Mastering AI"
+            class="ai-book ai-book-main"
+          />
+          <img
+            src="{% static 'images/ai_recommendation/img3.jpeg' %}"
+            alt="Design"
+            class="ai-book mt-3"
+          />
+        </div>
+      </div>
+      <!-- 우측: AI 추천 검색 (5) -->
+      <div class="col-lg-5 text-center text-lg-start">
+        <h3 class="mb-3 section-title">AI 추천</h3>
+        <p class="text-muted mb-1">읽고 싶은 주제나 지금의 기분을 적어 주세요.</p>
+        <p class="text-muted">
+          <span class="highlight">AI가 알라딘에서</span> 꼭 맞는 책 3권을 골라드려요.
+        </p>
+        <form class="ai-form" action="{% url 'recommend:recommend' %}" method="post" novalidate>
+          {% csrf_token %}
+          <input type="text" name="q" class="form-control" maxlength="50" autocomplete="off"
+                 placeholder="예: AI, 번아웃 왔을 때 읽을 책" aria-label="AI 추천 검색어" required />
+          <button type="submit" class="btn btn-brand"><i class="bi bi-stars me-1"></i>추천받기</button>
+        </form>
+        <div class="ai-examples">
+          {% for example in ai_examples %}
+          <button type="button" class="search-chip" data-ai-example="{{ example }}">{{ example }}</button>
+          {% endfor %}
+        </div>
+        {% if not user.is_authenticated %}
+        <p class="ai-login-hint">
+          <i class="bi bi-lock me-1"></i><a href="{% url 'accounts:login' %}?next={% url 'books:index' %}%23ai-recommendation">로그인</a>하면 AI 추천을 받을 수 있어요.
+        </p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- 결과: main.js가 채운다 -->
+    <div class="ai-result" aria-live="polite" hidden>
+      <p class="ai-result-head"></p>
+      <div class="ai-cards"></div>
+      <p class="ai-result-note"></p>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 장르별 도서 목록 -->
+<section id="genre" class="genre-books section-space">
+  <h3 class="section-title mb-4 reveal">장르별 도서 목록</h3>
+  <div class="genre-grid">
+    {% for genre in genres %}
+    <a class="genre-item genre-{{ genre.area }} reveal" style="--i: {% cycle 0 1 2 3 %}"
+       href="{% url 'books:genre' genre.slug %}">
+      <img src="{% static genre.image %}" alt="{{ genre.name }}" />
+      {% if forloop.first %}<span class="genre-badge">이번 주 인기 장르</span>{% endif %}
+      <span class="genre-name">{{ genre.name }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- 5. 인기 쓰레드 -->
+<section id="thread" class="thread section-space bg-light">
+  <div class="popular-thread reveal">
+    <h3 class="section-title mb-2">지금 이 쓰레드</h3>
+    <h3 class="section-subtitle">최근 사람들이 많이 공감한 게시글입니다</h3>
+  </div>
+  <div class="thread-list">
+    <div class="row g-4">
+      {% for thread in threads %}
+      <div class="col-12 col-sm-6 col-lg-4 reveal" style="--i: {% cycle 0 1 2 %}">
+        {% include 'threads/includes/thread_card.html' %}
+      </div>
+      {% empty %}
+      <div class="col-12 text-center text-muted py-5">
+        아직 쓰레드가 없어요. 책 상세 페이지에서 첫 쓰레드를 남겨 보세요.
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a class="btn btn-outline-dark rounded-pill px-4" href="{% url 'threads:list' %}">
+      모든 쓰레드 보기 <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+</section>
+{% endblock content %}
