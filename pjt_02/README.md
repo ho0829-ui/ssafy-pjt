@@ -116,7 +116,7 @@ response = requests.get(ALADIN_SEARCH_URL, params=params, timeout=5)
 data = response.json()
 ```
 
-<img src="skeleton/output_img/A1.png" width="600">
+<img src="skeleton/screenshots/A1.png" width="600">
 
 <br><br>
 
@@ -129,7 +129,7 @@ data = response.json()
 - 📌 `mkdir(parents=True, exist_ok=True)`로 폴더가 이미 있어도 에러가 나지 않도록 처리
 - 📌 응답 데이터의 도서 목록은 최상위가 아니라 **`item` 키 아래**에 들어 있음
 
-<img src="skeleton/output_img/A2.png" width="600">
+<img src="skeleton/screenshots/A2.png" width="600">
 
 <br><br>
 
@@ -146,7 +146,7 @@ items = data.get('item', [])
 title = items[0].get('title') if items else None
 ```
 
-<img src="skeleton/output_img/A3.png" width="600">
+<img src="skeleton/screenshots/A3.png" width="600">
 
 <br>
 
@@ -167,7 +167,7 @@ title = items[0].get('title') if items else None
 - 📌 출판 연도는 `pubDate`(`"2023-05-01"` 형태)에서 앞 4자리를 잘라 `int()`로 변환
 - 📌 전체 평균은 주제별 평균을 다시 평균 내지 않고, **전체 도서의 합계를 총 권수로** 나누어 계산
 
-<img src="skeleton/output_img/B1.png" width="600">
+<img src="skeleton/screenshots/B1.png" width="600">
 
 <br><br>
 
@@ -184,11 +184,11 @@ title = items[0].get('title') if items else None
 
 > ⚠️ `json.dump()`에 `ensure_ascii=False`를 지정하지 않으면 한글이 `\uXXXX` 형태로 저장되어 파일을 열어도 읽을 수 없습니다. `indent=2`로 들여쓰기를 넣어 확인하기 쉽게 만들었습니다.
 
-<img src="skeleton/output_img/B2.png" width="600">
+<img src="skeleton/screenshots/B2.png" width="600">
 
 **📄 생성된 JSON 일부**
 
-<img src="skeleton/output_img/B2-json.png" width="800">
+<img src="skeleton/screenshots/B2-json.png" width="800">
 
 <br><br>
 
@@ -202,11 +202,11 @@ title = items[0].get('title') if items else None
 - 📌 5건을 채우면 `break`로 반복을 중단해 불필요한 순회를 하지 않음
 - 📌 `enumerate(books, 1)`로 파일명의 번호를 붙임
 
-<img src="skeleton/output_img/B3.png" width="600">
+<img src="skeleton/screenshots/B3.png" width="600">
 
 **📄 생성된 JSON 일부**
 
-<img src="skeleton/output_img/B3-json.png" width="800">
+<img src="skeleton/screenshots/B3-json.png" width="800">
 
 <br>
 
