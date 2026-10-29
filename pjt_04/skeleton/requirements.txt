@@ -1,0 +1,5 @@
+asgiref==3.13.0
+Django==5.2
+django-bootstrap5==26.4
+sqlparse==0.6.0
+tzdata==2026.6

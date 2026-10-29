@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ book.title }} · Books{% endblock title %}
+
+{% block content %}
+  <article class="page mx-auto">
+    <a href="{% url 'books:index' %}" class="link-secondary text-decoration-none small">&larr; 목록으로</a>
+
+    <h1 class="h2 fw-bold mt-2 mb-2">{{ book.title }}</h1>
+    <p class="text-body-secondary mb-4">
+      {{ book.author }}
+      <span class="mx-2">·</span>
+      <span class="text-warning">&#9733;</span> {{ book.customer_review_rank }}
+    </p>
+
+    <div class="border-top pt-4 mb-5" style="line-height: 1.8;">
+      {{ book.description|linebreaksbr }}
+    </div>
+
+    {% if user.is_authenticated %}
+      <div class="d-flex gap-2 border-top pt-3">
+        <a href="{% url 'books:update' book.pk %}" class="btn btn-outline-dark btn-sm px-3">수정하기</a>
+        <form action="{% url 'books:delete' book.pk %}" method="POST" onsubmit="return confirm('이 도서를 삭제할까요?');">
+          {% csrf_token %}
+          <button class="btn btn-outline-danger btn-sm px-3">삭제하기</button>
+        </form>
+      </div>
+    {% endif %}
+  </article>
+{% endblock content %}

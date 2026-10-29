@@ -7,20 +7,20 @@ from .models import Todo
 # ※ 저장할 데이터가 아니라 "검색 조건" 을 받으므로 ModelForm 이 아닌 forms.Form 사용
 # ※ required=False : 아무것도 입력하지 않으면 전체 목록
 # ※ [('', '전체')] + Todo.STATUS_CHOICES : 모델의 선택지 앞에 '전체' 를 하나 붙임
-# class TodoSearchForm(forms.Form):
-#     status = forms.ChoiceField(
-#         choices=[('', '전체')] + Todo.STATUS_CHOICES,
-#         required=False,
-#         label='상태',
-#         widget=forms.Select(attrs={'class': 'form-select'}),
-#     )
-#     keyword = forms.CharField(
-#         required=False,
-#         label='검색어',
-#         widget=forms.TextInput(
-#             attrs={'class': 'form-control', 'placeholder': '제목에 포함된 단어'}
-#         ),
-#     )
+class TodoSearchForm(forms.Form):
+    status = forms.ChoiceField(
+        choices=[('', '전체')] + Todo.STATUS_CHOICES,
+        required=False,
+        label='상태',
+        widget=forms.Select(attrs={'class': 'form-select'}),
+    )
+    keyword = forms.CharField(
+        required=False,
+        label='검색어',
+        widget=forms.TextInput(
+            attrs={'class': 'form-control', 'placeholder': '제목에 포함된 단어'}
+        ),
+    )
 
 
 class TodoForm(forms.ModelForm):
@@ -30,19 +30,19 @@ class TodoForm(forms.ModelForm):
     # ※ 모델의 tags 는 문자열 칸이지만, 폼에서는 같은 이름으로 MultipleChoiceField 를 선언해 바꿔 끼움
     # ※ 체크한 값들은 cleaned_data 에 리스트(['WORK', 'STUDY'])로 들어옴
     # ※ 해제 후 아래 Meta 의 STEP 3-3 도 해제하고 makemigrations · migrate
-    # tags = forms.MultipleChoiceField(
-    #     choices=Todo.TAG_CHOICES,
-    #     required=False,
-    #     label='태그',
-    #     # CheckboxSelectMultiple : 체크박스로 그리기 (지우면 여러 줄 선택 상자로 그려짐)
-    #     widget=forms.CheckboxSelectMultiple,
-    # )
-    #
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-    #     # 수정 화면 : DB 의 'WORK,STUDY' 를 리스트로 바꿔 체크된 상태로 보여 줌
-    #     if self.instance.pk:
-    #         self.initial['tags'] = self.instance.get_tag_list()
+    tags = forms.MultipleChoiceField(
+        choices=Todo.TAG_CHOICES,
+        required=False,
+        label='태그',
+        # CheckboxSelectMultiple : 체크박스로 그리기 (지우면 여러 줄 선택 상자로 그려짐)
+        widget=forms.CheckboxSelectMultiple,
+    )
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # 수정 화면 : DB 의 'WORK,STUDY' 를 리스트로 바꿔 체크된 상태로 보여 줌
+        if self.instance.pk:
+            self.initial['tags'] = self.instance.get_tag_list()
 
     class Meta:
         model = Todo
@@ -50,9 +50,9 @@ class TodoForm(forms.ModelForm):
         # fields += [...] 는 STEP 마다 칸을 하나씩 늘리기 위한 실습용 표기
         # 실제 코드에서는 fields = ['title', 'content', 'status', 'priority', 'tags'] 처럼 한 줄로 씀
         # [STEP 2-1] 상태 칸 추가
-        # fields += ['status']
+        fields += ['status']
         # [STEP 2-2] 우선순위 칸 추가 (models.py 에 priority 를 작성한 뒤 해제)
-        # fields += ['priority']
+        fields += ['priority']
         # [STEP 3-3] 태그 칸 추가
         # fields += ['tags']
 
@@ -84,4 +84,4 @@ class UpdateTodoForm(TodoForm):
 
     class Meta(TodoForm.Meta):
         # TODO: TodoForm.Meta.fields 에 'completed' 를 더한 리스트로 바꾸기
-        fields = TodoForm.Meta.fields
+        fields = TodoForm.Meta.fields + ['completed']

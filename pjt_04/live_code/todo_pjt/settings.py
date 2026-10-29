@@ -93,10 +93,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # [STEP 1-2] 한국어 · 한국 시간으로 바꾸기
 # ※ 관리자 화면 · 비밀번호 검증 메시지가 한국어로, 날짜 · 시간이 한국 시간으로 표시됨
 # ※ 아래 두 줄을 해제한 뒤, 바로 아래의 en-us · UTC 두 줄은 지웁니다
-# LANGUAGE_CODE = 'ko-kr'
-# TIME_ZONE = 'Asia/Seoul'
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = 'ko-kr'
+TIME_ZONE = 'Asia/Seoul'
+# LANGUAGE_CODE = 'en-us'
+# TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
@@ -115,4 +115,4 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # [STEP 1-1] 기본 User 대신 accounts 앱의 User 사용
 # ※ 반드시 첫 migrate 전에 설정합니다
 # ※ 먼저 accounts/models.py 의 STEP 1-1 만 해제하고 python manage.py check 를 실행해 에러를 확인한 뒤 해제하세요
-# AUTH_USER_MODEL = 'accounts.User'
+AUTH_USER_MODEL = 'accounts.User'

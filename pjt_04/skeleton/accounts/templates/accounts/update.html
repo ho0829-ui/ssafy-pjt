@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}회원정보수정 · Books{% endblock title %}
+
+{% block content %}
+  <div class="page-narrow mx-auto">
+    <h1 class="h3 fw-bold mb-4">회원정보수정</h1>
+    <form action="{% url 'accounts:update' %}" method="POST" novalidate>
+      {% csrf_token %}
+      {% bootstrap_form form %}
+      <button class="btn btn-dark w-100 py-2">저장</button>
+    </form>
+    <p class="text-center text-body-secondary small mt-4 mb-0">
+      비밀번호를 바꾸려면 <a href="{% url 'change_password' user.pk %}" class="link-dark">비밀번호 변경</a>
+    </p>
+  </div>
+{% endblock content %}
