@@ -1,0 +1,64 @@
+{% extends 'comments/base.html' %}
+
+{% block title %}{{ item.company_name }} 댓글 분석 결과{% endblock %}
+
+{% block content %}
+<section>
+  <h2 class="result-title">{{ item.company_name }} 댓글 분석 결과</h2>
+  <p class="muted center">입력 "{{ item.keyword }}" · {{ item.created_at|date:"Y-m-d H:i:s" }}</p>
+
+  {% for w in item.warnings %}
+  <div class="alert warn">⚠ {{ w }}</div>
+  {% endfor %}
+
+  {% if item.summary %}
+  <div class="summary">
+    <h3>📝 댓글 요약</h3>
+    <p>{{ item.summary|linebreaksbr }}</p>
+  </div>
+  {% endif %}
+
+  <div class="columns">
+    <div class="col">
+      <h3>원본 데이터 ({{ item.raw_comments|length }}개)</h3>
+      <ol>{% for c in item.raw_comments %}<li>{{ c|linebreaksbr }}</li>{% endfor %}</ol>
+    </div>
+    <div class="col">
+      <h3>전처리 후 ({{ item.cleaned_comments|length }}개)<small>길이: {{ item.iqr_info.applied_min|default:5 }}~{{ item.iqr_info.applied_max|default:76 }}</small></h3>
+      <ol>{% for c in item.cleaned_comments %}<li>{{ c }}</li>{% empty %}<p class="muted">남은 댓글이 없습니다.</p>{% endfor %}</ol>
+    </div>
+    <div class="col">
+      <h3>증강 데이터 ({{ item.augmented_comments|length }}개)</h3>
+      <ol>{% for c in item.augmented_comments %}<li>{{ c }}</li>{% empty %}<p class="muted">증강 데이터가 없습니다.</p>{% endfor %}</ol>
+    </div>
+    <div class="col integrated">
+      <h3>통합 데이터 ({{ item.integrated|length }}건)</h3>
+      <ol>
+        {% for r in item.integrated %}
+        <li class="{% if r.removed_reason %}removed{% endif %}">
+          <div><span class="tag raw">원본</span>{{ r.original }}</div>
+          {% if r.removed_reason %}
+          <div><span class="tag drop">제거</span>{{ r.removed_reason }}</div>
+          {% else %}
+          <div><span class="tag clean">정제</span>{{ r.cleaned }}</div>
+          {% if r.augmented %}<div><span class="tag aug">증강</span>{{ r.augmented }}</div>{% endif %}
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </div>
+
+  {% if item.iqr_info %}
+  <table class="iqr">
+    <caption>정제 댓글 길이 분포 (IQR 임계값 정보)</caption>
+    <tr><th>Q1</th><th>Q3</th><th>IQR</th><th>하한 (Q1-1.5·IQR)</th><th>상한 (Q3+1.5·IQR)</th><th>적용 길이 기준</th></tr>
+    <tr>
+      <td>{{ item.iqr_info.q1 }}</td><td>{{ item.iqr_info.q3 }}</td><td>{{ item.iqr_info.iqr }}</td>
+      <td>{{ item.iqr_info.lower_bound }}</td><td>{{ item.iqr_info.upper_bound }}</td>
+      <td>{{ item.iqr_info.applied_min }} ~ {{ item.iqr_info.applied_max }}자</td>
+    </tr>
+  </table>
+  {% endif %}
+</section>
+{% endblock %}

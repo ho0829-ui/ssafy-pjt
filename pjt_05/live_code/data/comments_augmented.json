@@ -1,0 +1,70 @@
+{
+  "company": "삼성전자",
+  "collected_at": "2026-10-30T10:26:28",
+  "count": 14,
+  "records": [
+    {
+      "text": "떨어지면 욕하고 오르면 찬양하는거 웃기네",
+      "source": "original"
+    },
+    {
+      "text": "잘못된 판단으로 희망고문 받고있음",
+      "source": "original"
+    },
+    {
+      "text": "검은 월화수목금요일",
+      "source": "original"
+    },
+    {
+      "text": "어차피 우리집 불난거 옆집 더 크게 불난거나 구경가야겠다",
+      "source": "original"
+    },
+    {
+      "text": "3만원먹으려다 30만원 잃었네",
+      "source": "original"
+    },
+    {
+      "text": "걍 단타 놀이터네",
+      "source": "original"
+    },
+    {
+      "text": "내가사면 더 내린다",
+      "source": "original"
+    },
+    {
+      "text": "하락하면 욕하고 상승하면 칭찬한다는 모습이 참 웃기다",
+      "source": "augmented",
+      "origin_index": 0
+    },
+    {
+      "text": "잘못된 판단 탓에 헛된 희망에 시달리고 있다",
+      "source": "augmented",
+      "origin_index": 1
+    },
+    {
+      "text": "월요일부터 금요일까지 다 검은색이다",
+      "source": "augmented",
+      "origin_index": 2
+    },
+    {
+      "text": "어차피 우리집이 불난 상황이니 옆집이 더 크게 불타는 걸 구경하러 가야겠다",
+      "source": "augmented",
+      "origin_index": 3
+    },
+    {
+      "text": "3만원 벌려다 30만원을 잃어버렸네",
+      "source": "augmented",
+      "origin_index": 4
+    },
+    {
+      "text": "그냥 단타 놀이터일 뿐이야",
+      "source": "augmented",
+      "origin_index": 5
+    },
+    {
+      "text": "내가 사면 가격이 더 내려간다",
+      "source": "augmented",
+      "origin_index": 6
+    }
+  ]
+}

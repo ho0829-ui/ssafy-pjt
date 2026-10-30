@@ -1,0 +1,13 @@
+{% extends 'comments/base.html' %}
+
+{% block content %}
+<section class="intro">
+  <ol>
+    <li><strong>입력</strong> — 회사명을 입력합니다.</li>
+    <li><strong>수집</strong> — Selenium 으로 토스증권 커뮤니티 댓글을 실시간 크롤링합니다.</li>
+    <li><strong>전처리</strong> — 특수문자·반복 패턴 제거, 길이(5~76자) 필터, LLM 부적절 댓글 제거.</li>
+    <li><strong>증강</strong> — GMS LLM 으로 의미를 유지한 확장 문장을 생성합니다.</li>
+    <li><strong>통합</strong> — 단계별 결과를 하나로 묶어 저장하고 요약과 함께 보여줍니다.</li>
+  </ol>
+</section>
+{% endblock %}
